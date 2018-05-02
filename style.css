@@ -1,0 +1,108 @@
+/*
+ Theme Name:   Storefront Child
+ Theme URI:    
+ Description:  Storefront Child Theme
+ Author:       Kim Nyegaard Andreasen
+ Author URI:   
+ Template:     storefront
+ Version:      1.0.0
+ License:      GNU General Public License v2 or later
+ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+ Tags:         
+ Text Domain:  storefront-child
+*/
+
+.header-widget-region
+{
+	background-color: #AA8439;
+}
+
+.header-widget-region p
+{
+	color: #ffffff;
+	margin: 0px 0px 0px 0px;
+}
+
+.site-info
+{
+	display: none;
+}
+
+
+.site-header
+{
+	background: linear-gradient(to bottom, rgba(31,51,99,0.7), rgba(10,44,60,1));
+}
+
+.site-footer
+{
+	background: linear-gradient(to bottom, rgba(120,135,170,0.7), rgba(10,44,60,1));
+	padding: 1.618em 0 3.706325903em 1em 1em;
+}
+
+.widget_product_search button
+{
+	visibility: hidden;
+}
+
+.post-item img
+{
+    border-radius: 4px;
+}
+
+.post-item
+{
+	margin-right: 2.9% !important;
+}
+
+.post-title a
+{
+	text-decoration: none;
+    text-align: center;
+    color: #14485f;
+    margin: 55px 0 0;
+    -webkit-transition: color .3s;
+    -moz-transition: color .3s;
+    transition: color .3s;
+    font: 500 18px/25px "Roboto",Arial,sans-serif;
+    text-transform: none;
+    font-weight: bold;
+}
+
+.post-category a
+{
+	text-decoration: none;
+    color: #797979;
+    text-transform: uppercase;
+    border: 0;
+}
+
+.wordpress_wrapper
+{
+	text-align: center;
+}
+
+.wordpress_loadmore
+{
+	color: #fff;
+	background-color: #7887AA;
+	margin-left: auto;
+  	margin-right: auto;
+	width: 30%;
+	border-radius: 2px;
+	display: block;
+	text-align: center;
+	font-size: 0.875rem;
+	font-weight: 800;
+	letter-spacing: 1px;
+	cursor: pointer;
+	text-transform: uppercase;
+	padding: 10px 0;
+	transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.3s ease-in-out;  
+}
+
+.wordpress_loadmore:hover
+{
+	color: #fff;
+	background-color: #1F3363;
+}
