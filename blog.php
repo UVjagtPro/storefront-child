@@ -24,12 +24,12 @@
 
 					<?php 
 
-			        $query_params = array(
-			                'post_type' => 'post',
-			                'posts_per_page' => 3 // Value "-1" displays all products in feed
+			        $args = array(
+			        	// 'posts_per_page' => 9, // Value "-1" displays all products in feed	
+		                'post_type' => 'post'
 			        );
 
-			        $wp_query = new WP_Query( $query_params);        
+			        $wp_query = new WP_Query( $args);        
 
 			        if( $wp_query->have_posts() ) :
 
@@ -70,6 +70,7 @@
 					?>
 				</nav>
 
+				<?php wp_reset_postdata(); ?>
 				
 			</div>
 		</main><!-- #main -->
