@@ -314,6 +314,11 @@
 	{
 		global $wp_query; 
 
+		if (!isset( $wp_query ))
+    	{
+    		return;
+    	}
+
 		// In most cases it is already included on the page and this line can be removed
 		wp_enqueue_script('jquery');
 	 
@@ -323,14 +328,12 @@
 		// now the most interesting part
 		// we have to pass parameters to myloadmore.js script but we can get the parameters values only in PHP
 		// you can define variables directly in your HTML but I decided that the most proper way is wp_localize_script()
+
 		wp_localize_script( 'my_loadmore', 'wordpress_loadmore_params', array(
-			//'ajaxurl' => admin_url() . 'admin-ajax.php', // WordPress AJAX
-			//'ajaxurl' => admin_url( 'admin-ajax.php'), 
-			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			'posts' => json_encode( $wp_query->query_vars ), // everything about your loop is here
+			'ajaxurl' => admin_url( 'admin-ajax.php' ), // WordPress AJAX
 			'current_page' => get_query_var( 'paged' ) ? get_query_var('paged') : 1,
-			//'max_page' => '3',
-			'max_page' => json_encode( $wp_query->max_num_pages)
+			'posts' => json_encode( $wp_query->query_vars ), // everything about your loop is here
+			'max_page' => $wp_query->max_num_pages
 		));
 	 
 	 	wp_enqueue_script( 'my_loadmore' );
@@ -356,6 +359,7 @@
 
 		// prepare our arguments for the query
 		$args = json_decode( stripslashes( $_POST['query'] ), true );
+
 		$args['paged'] = $_POST['page'] + 1; // we need next page to be loaded
 		$args['post_status'] = 'publish';
 
