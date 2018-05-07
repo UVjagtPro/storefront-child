@@ -20,7 +20,7 @@ jQuery(function($){
 			{
 				console.log("Loading");
 		
-				button.text('Loading...'); // change the button text, you can also add a preloader image
+				button.text('Indlæser...'); // change the button text, you can also add a preloader image
 			},
 			success : function( data )
 			{
@@ -32,7 +32,7 @@ jQuery(function($){
 					console.log(wordpress_loadmore_params.current_page);
 					console.log(wordpress_loadmore_params.max_page);
 
-					button.text( 'More posts' ).prev().before(data); // insert new posts
+					button.text( 'Flere indlæg' ).prev().before(data); // insert new posts
 					wordpress_loadmore_params.current_page++;
  
 					if ( wordpress_loadmore_params.current_page == wordpress_loadmore_params.max_page ) 

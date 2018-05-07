@@ -25,7 +25,7 @@
 					<?php 
 
 			        $args = array(
-			        	// 'posts_per_page' => 9, // Value "-1" displays all products in feed	
+			        	'posts_per_page' => 3, // Value "-1" displays all products in feed	
 		                'post_type' => 'post'
 			        );
 
@@ -65,13 +65,15 @@
 					if (  $wp_query->max_num_pages > 1 )
 						echo '
 							<div class="wordpress_wrapper">
-								<div class="wordpress_loadmore">More posts</div>
+								<div class="wordpress_loadmore">Flere indlæg</div>
 							</div>'; // you can use <a> as well
 					?>
 				</nav>
 
 				<?php wp_reset_postdata(); ?>
-				
+
+				<?php echo 'Number of pages: ' . $wp_query->max_num_pages; ?>
+
 			</div>
 		</main><!-- #main -->
 	</div><!-- #primary -->
