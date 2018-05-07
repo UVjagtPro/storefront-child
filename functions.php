@@ -29,6 +29,103 @@
 
     add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 
+    /*######################################################################################################
+	########################################################################################################
+	########################################################################################################
+	############################### Load more posts - Enqueue jQuery and  ##################################
+	############################### myloadmore.js. Pass query parameters  ##################################
+	############################### to the script                         ##################################
+	########################################################################################################
+	########################################################################################################
+	########################################################################################################*/
+
+	function wordpress_my_load_more_scripts() 
+	{
+		global $wp_query; 
+
+		if (!isset( $wp_query ))
+    	{
+    		return;
+    	}
+
+		// In most cases it is already included on the page and this line can be removed
+		wp_enqueue_script('jquery');
+	 
+		// register our main script but do not enqueue it yet
+		wp_register_script( 'my_loadmore', get_stylesheet_directory_uri() . '/myloadmore.js', array('jquery') );
+	 
+		// now the most interesting part
+		// we have to pass parameters to myloadmore.js script but we can get the parameters values only in PHP
+		// you can define variables directly in your HTML but I decided that the most proper way is wp_localize_script()
+
+		$postArray = array(
+			'ajaxurl' => admin_url( 'admin-ajax.php' ), // WordPress AJAX
+			'current_page' => get_query_var( 'paged' ) ? get_query_var('paged') : 1,
+			'posts' => json_encode( $wp_query->query_vars ), // everything about your loop is here
+			'max_page' => $wp_query->max_num_pages
+		);
+
+		wp_localize_script( 'my_loadmore', 'wordpress_loadmore_params', $postArray);
+	 
+	 	wp_enqueue_script( 'my_loadmore' );
+
+	}
+	 
+	add_action( 'wp_enqueue_scripts', 'wordpress_my_load_more_scripts' );
+
+	
+	/*######################################################################################################
+	########################################################################################################
+	########################################################################################################
+	########################################################################################################
+	############################### AJAX handler ###########################################################
+	########################################################################################################
+	########################################################################################################
+	########################################################################################################
+	########################################################################################################*/
+
+	function wordpress_loadmore_ajax_handler()
+	{
+		debug_to_console("Hello!");
+
+		// prepare our arguments for the query
+		$args = json_decode( stripslashes( $_POST['query'] ), true );
+
+		$args['paged'] = $_POST['page'] + 1; // we need next page to be loaded
+		$args['post_status'] = 'publish';
+
+
+		// it is always better to use WP_Query but not here
+		query_posts( $args );
+		//$re_query = new WP_Query($args);
+	 
+		if(have_posts() ) :
+
+			echo "We have post(s)!";
+	
+			// run the loop
+			while( have_posts() ): the_post();
+	 
+				echo "A post!";
+				// look into your theme code how the posts are inserted, but you can use your own HTML of course
+				// do you remember? - my example is adapted for Twenty Seventeen theme
+				//get_template_part( 'blog', 'standard' );
+				// for the test purposes comment the line above and uncomment the below one
+				// the_title();
+	 
+	 
+			endwhile;
+	 
+		endif;
+
+		debug_to_console("Die!");
+
+		die; // here we exit the script and even no wp_reset_query() required!
+	} 
+	 
+	add_action('wp_ajax_loadmore', 'wordpress_loadmore_ajax_handler'); // wp_ajax_{action}
+	add_action('wp_ajax_nopriv_loadmore', 'wordpress_loadmore_ajax_handler'); // wp_ajax_nopriv_{action}
+
 	/*######################################################################################################
     ########################################################################################################
     ########################################################################################################
@@ -37,8 +134,8 @@
     ########################################################################################################
     ########################################################################################################
     ########################################################################################################
-    ########################################################################################################*/    
-
+    ########################################################################################################*/
+    
     function debug_to_console( $data ) 
     {
 	    $output = $data;
@@ -299,100 +396,5 @@
 		
 		echo paginate_links( $pagination );
 	}*/
-
-	/*######################################################################################################
-	########################################################################################################
-	########################################################################################################
-	############################### Load more posts - Enqueue jQuery and  ##################################
-	############################### myloadmore.js. Pass query parameters  ##################################
-	############################### to the script                         ##################################
-	########################################################################################################
-	########################################################################################################
-	########################################################################################################*/
-
-	function wordpress_my_load_more_scripts() 
-	{
-		global $wp_query; 
-
-		if (!isset( $wp_query ))
-    	{
-    		return;
-    	}
-
-		// In most cases it is already included on the page and this line can be removed
-		wp_enqueue_script('jquery');
-	 
-		// register our main script but do not enqueue it yet
-		wp_register_script( 'my_loadmore', get_stylesheet_directory_uri() . '/myloadmore.js', array('jquery') );
-	 
-		// now the most interesting part
-		// we have to pass parameters to myloadmore.js script but we can get the parameters values only in PHP
-		// you can define variables directly in your HTML but I decided that the most proper way is wp_localize_script()
-
-		wp_localize_script( 'my_loadmore', 'wordpress_loadmore_params', array(
-			'ajaxurl' => admin_url( 'admin-ajax.php' ), // WordPress AJAX
-			'current_page' => get_query_var( 'paged' ) ? get_query_var('paged') : 1,
-			'posts' => json_encode( $wp_query->query_vars ), // everything about your loop is here
-			'max_page' => $wp_query->max_num_pages
-		));
-	 
-	 	wp_enqueue_script( 'my_loadmore' );
-
-	}
-	 
-	add_action( 'wp_enqueue_scripts', 'wordpress_my_load_more_scripts' );
-
-	
-	/*######################################################################################################
-	########################################################################################################
-	########################################################################################################
-	########################################################################################################
-	############################### AJAX handler ###########################################################
-	########################################################################################################
-	########################################################################################################
-	########################################################################################################
-	########################################################################################################*/
-
-	function wordpress_loadmore_ajax_handler()
-	{
-		debug_to_console("Hello!");
-
-		// prepare our arguments for the query
-		$args = json_decode( stripslashes( $_POST['query'] ), true );
-
-		$args['paged'] = $_POST['page'] + 1; // we need next page to be loaded
-		$args['post_status'] = 'publish';
-
-
-		// it is always better to use WP_Query but not here
-		query_posts( $args );
-		//$re_query = new WP_Query($args);
-	 
-		if(have_posts() ) :
-
-			echo "We have post(s)!";
-	
-			// run the loop
-			while( have_posts() ): the_post();
-	 
-				echo "A post!";
-				// look into your theme code how the posts are inserted, but you can use your own HTML of course
-				// do you remember? - my example is adapted for Twenty Seventeen theme
-				//get_template_part( 'blog', 'standard' );
-				// for the test purposes comment the line above and uncomment the below one
-				// the_title();
-	 
-	 
-			endwhile;
-	 
-		endif;
-
-		debug_to_console("Die!");
-
-		die; // here we exit the script and even no wp_reset_query() required!
-	} 
-	 
-	add_action('wp_ajax_loadmore', 'wordpress_loadmore_ajax_handler'); // wp_ajax_{action}
-	add_action('wp_ajax_nopriv_loadmore', 'wordpress_loadmore_ajax_handler'); // wp_ajax_nopriv_{action}
 
 ?>
